@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="Kirill Kondratenko <kk92@ya.ru>">
+
+  {% set title = title|default('Advanced Simpla Admin Panel') %}
+  {% set no_header = no_header|default(False) %}
+  <title>{{ title }}</title>
+
+  <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i&subset=cyrillic" rel="stylesheet">
+
+</head>
+
+<body>
+
+{% if not no_header %}
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{{ url_for('show_products') }}">SIMPLA PYTHON ADMIN</a>
+      </div>
+      <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+
+          {% set active_page = active_page|default('products') %}
+
+
+
+          <li {% if active_page == 'products' %}class="active"{% endif %}>
+            <a href="{{ url_for('show_products') }}">Товары</a>
+          </li>
+
+
+          <li>
+            <a href="{{ url_for('logout') }}">Выход</a>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+  {% endif %}
+
+
+  {% block content %}  {% endblock %}
+
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Операция выполнена успешно</h4>
+        </div>
+        <div class="modal-body">
+          Объект обновлён в базе данных.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Спасибо</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="{{ url_for('static', filename='admin/js/jquery-3.1.1.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='admin/js/bootstrap.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='admin/js/angular.min.js') }}"></script>
+  <!-- <script src="{{ url_for('static', filename='admin/js/script.js') }}"></script> -->
+
+</body>
+
+</html>

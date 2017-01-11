@@ -1,0 +1,39 @@
+{% set active_page = 'products' %}
+{% set title = 'Товары' %}
+
+{% extends "root.html" %}
+
+{% block content %}
+
+<div class="container" style="max-width: 100%; margin-bottom: 200px;">
+
+<div class="starter-template">
+  <h1>Товары</h1>
+</div>
+
+<table class="table table-striped table-condensed table-hover">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Название</th>
+      <th>Дата добавления</th>
+      <th>Ссылка</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in products %}
+    <tr>
+      <td>{{ product.id }}</td>
+      <td><a href="#">{{ product.name }}</a></td>
+      <td>{{ product.created.format('DD MMMM YYYY', locale='ru_ru') if product.created }}</td>
+      <td><a href="{{ product.get_url() }}" target="_blank">{{ product.url }}</a></td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+
+
+</div>
+
+{% endblock %}

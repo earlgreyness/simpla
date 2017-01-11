@@ -1,0 +1,6 @@
+SQLAlchemy >= 1.1.4
+PyMySQL >= 0.7.9
+Flask-SQLAlchemy >= 2.1
+SQLAlchemy-Utils >= 0.32.12
+arrow >= 0.10.0
+Flask-Login >= 0.4.0
