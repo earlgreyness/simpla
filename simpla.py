@@ -17,7 +17,7 @@ from flask_login import (
 
 
 app = Flask(__name__, static_folder='static')
-app.config.from_object('config')
+app.config.from_pyfile('config.py')
 
 db = SQLAlchemy(app)
 
@@ -51,7 +51,6 @@ class Product(db.Model):
     name = Column(Unicode)
     created = Column(ArrowType)
     url = Column(Unicode)
-    parent_id = Column(Integer, ForeignKey('s_products.id'))
 
     categories = relationship('Category',
                               secondary=association_table,
@@ -65,8 +64,15 @@ class Product(db.Model):
             domain=app.config['ONLINE_STORE_DOMAIN'],
         )
 
+    @property
+    def main_category(self):
+        if not self.categories:
+            return None
+        return self.categories[0]
+
     @staticmethod
     def get_all_categories():
+        """Helper proxy method."""
         return Category.get_all()
 
     def __repr__(self):
@@ -80,7 +86,9 @@ class Category(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(Unicode)
     visible = Column(Boolean)
+    parent_id = Column(Integer, ForeignKey('s_categories.id'))
 
+    parent = relationship('Category', foreign_keys='[Category.parent_id]', remote_side=[id])
     products = relationship('Product',
                             secondary=association_table,
                             back_populates='categories',
@@ -99,6 +107,13 @@ class Category(db.Model):
 def show_products():
     products = Product.query.order_by(Product.id.desc()).all()
     return render_template('products.html', products=products)
+
+
+@app.route('/products/<int:id>')
+@login_required
+def show_product(id):
+    product = Product.query.get(id)
+    return render_template('product.html', product=product)
 
 
 @app.route('/login', methods=['GET', 'POST'])
