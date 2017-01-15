@@ -36,7 +36,8 @@ def load_user(login):
     return None
 
 
-association_table = Table('s_products_categories', db.metadata,
+association_table = Table(
+    's_products_categories', db.metadata,
     Column('product_id', Integer, ForeignKey('s_products.id')),
     Column('category_id', Integer, ForeignKey('s_categories.id')),
     info=dict(bind_key='simpla'),
