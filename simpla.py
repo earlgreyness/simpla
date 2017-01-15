@@ -51,6 +51,7 @@ class Product(db.Model):
     name = Column(Unicode)
     created = Column(ArrowType)
     url = Column(Unicode)
+    parent_id = Column(Integer, ForeignKey('s_products.id'))
 
     categories = relationship('Category',
                               secondary=association_table,
@@ -63,6 +64,10 @@ class Product(db.Model):
             label=self.url,
             domain=app.config['ONLINE_STORE_DOMAIN'],
         )
+
+    @staticmethod
+    def get_all_categories():
+        return Category.get_all()
 
     def __repr__(self):
         return "<Product {id}: {name}>".format(id=self.id, name=self.name)
@@ -81,15 +86,18 @@ class Category(db.Model):
                             back_populates='categories',
                             order_by='Product.id')
 
+    @classmethod
+    def get_all(cls):
+        return cls.query.order_by(cls.id).all()
+
     def __repr__(self):
         return '<Category {id}: {name}>'.format(id=self.id, name=self.name)
-
 
 
 @app.route('/products')
 @login_required
 def show_products():
-    products = db.session.query(Product).order_by(Product.id.desc()).all()
+    products = Product.query.order_by(Product.id.desc()).all()
     return render_template('products.html', products=products)
 
 
