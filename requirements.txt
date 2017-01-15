@@ -4,3 +4,5 @@ Flask-SQLAlchemy >= 2.1
 SQLAlchemy-Utils >= 0.32.12
 arrow >= 0.10.0
 Flask-Login >= 0.4.0
+openpyxl >= 2.4.1
+transliterate >= 1.9

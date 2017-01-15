@@ -24,7 +24,7 @@
     {% for product in products %}
     <tr>
       <td>{{ product.id }}</td>
-      <td><a href="{{ url_for('show_product', id=product.id) }}">{{ product.name }}</a></td>
+      <td><a href="{{ url_for('show_product', id=product.id) }}" target="_blank">{{ product.name }}</a></td>
       <td>{{ product.created.format('DD MMMM YYYY', locale='ru_ru') if product.created }}</td>
       <td><a href="{{ product.get_url() }}" target="_blank">{{ product.url }}</a></td>
     </tr>

@@ -12,6 +12,117 @@
 </div>
 
 
+<div class="row">
+    <div class="col-xs-6 col-lg-4">
+        {% for category in product.get_all_categories() %}
+        {% set checked = 'checked' if category in product.categories else '' %}
+
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="{{ category.id }}" {{ checked }}>
+            {{ category.name }}
+          </label>
+        </div>
+
+        {% endfor %}
+    </div>
+
+    <div class="col-xs-6 col-lg-4">
+        {% for category in product.get_all_categories() %}
+        {% set checked = 'checked' if category in product.categories else '' %}
+
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="{{ category.id }}" {{ checked }}>
+            {{ category.name }}
+          </label>
+        </div>
+
+        {% endfor %}
+        {% for category in product.get_all_categories() %}
+        {% set checked = 'checked' if category in product.categories else '' %}
+
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="{{ category.id }}" {{ checked }}>
+            {{ category.name }}
+          </label>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <div class="col-xs-6 col-lg-4">
+        {% for category in product.get_all_categories() %}
+        {% set checked = 'checked' if category in product.categories else '' %}
+
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="{{ category.id }}" {{ checked }}>
+            {{ category.name }}
+          </label>
+        </div>
+
+        {% endfor %}
+    </div>
+
+
+</div>
+<div class="row">
+    <div class="col-xs-6 col-lg-4">
+        {% for category in product.get_all_categories() %}
+        {% set checked = 'checked' if category in product.categories else '' %}
+
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="{{ category.id }}" {{ checked }}>
+            {{ category.name }}
+          </label>
+        </div>
+
+        {% endfor %}
+    </div>
+
+    <div class="col-xs-6 col-lg-4">
+        {% for category in product.get_all_categories() %}
+        {% set checked = 'checked' if category in product.categories else '' %}
+
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="{{ category.id }}" {{ checked }}>
+            {{ category.name }}
+          </label>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <div class="col-xs-6 col-lg-4">
+        {% for category in product.get_all_categories() %}
+        {% set checked = 'checked' if category in product.categories else '' %}
+
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="{{ category.id }}" {{ checked }}>
+            {{ category.name }}
+          </label>
+        </div>
+
+        {% endfor %}
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+
 </div>
 
 {% endblock %}

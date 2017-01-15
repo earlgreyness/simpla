@@ -2,12 +2,12 @@ import logging
 
 from sqlalchemy import (
     Column, Integer, Unicode, DateTime, String, Table,
-    ForeignKey, Boolean,
+    ForeignKey, Boolean, UnicodeText,
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ArrowType
 from flask import (
-    Flask, render_template, session, redirect, url_for, request,
+    Flask, render_template, session, redirect, url_for, request, abort,
 )
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import (
@@ -85,10 +85,19 @@ class Category(db.Model):
 
     id = Column(Integer, primary_key=True)
     name = Column(Unicode)
-    visible = Column(Boolean)
+    meta_title = Column(Unicode, default='')
+    meta_keywords = Column(Unicode, default='')
+    meta_description = Column(Unicode, default='')
+    url = Column(Unicode)
+    visible = Column(Integer)
     parent_id = Column(Integer, ForeignKey('s_categories.id'))
+    external_id = Column(Unicode, default='')
+    description = Column(UnicodeText, default='')
+    position = Column(Integer, default=0)
 
-    parent = relationship('Category', foreign_keys='[Category.parent_id]', remote_side=[id])
+    parent = relationship('Category',
+                          foreign_keys='[Category.parent_id]',
+                          remote_side='[Category.id]')
     products = relationship('Product',
                             secondary=association_table,
                             back_populates='categories',
@@ -99,7 +108,9 @@ class Category(db.Model):
         return cls.query.order_by(cls.id).all()
 
     def __repr__(self):
-        return '<Category {id}: {name}>'.format(id=self.id, name=self.name)
+        return '<Category {id}: {name} (parent_id={parent_id}, url={url})>'.format(
+            id=self.id, name=self.name, parent_id=self.parent_id, url=self.url,
+        )
 
 
 @app.route('/products')
@@ -109,10 +120,12 @@ def show_products():
     return render_template('products.html', products=products)
 
 
-@app.route('/products/<int:id>')
+@app.route('/products/<int:id>', methods=['GET', 'POST'])
 @login_required
 def show_product(id):
-    product = Product.query.get(id)
+    product = Product.query.get_or_404(id)
+    if request.method == 'POST':
+        raise NotImplementedError
     return render_template('product.html', product=product)
 
 
