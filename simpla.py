@@ -1,10 +1,12 @@
 import logging
+import itertools
+from collections import namedtuple
 
 from sqlalchemy import (
     Column, Integer, Unicode, DateTime, String, Table,
-    ForeignKey, Boolean, UnicodeText,
+    ForeignKey, Boolean, UnicodeText, func,
 )
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, aliased
 from sqlalchemy_utils import ArrowType
 from flask import (
     Flask, render_template, session, redirect, url_for, request, abort,
@@ -34,6 +36,9 @@ def load_user(login):
         user.id = login
         return user
     return None
+
+
+Group = namedtuple('Group', 'parent, children')
 
 
 association_table = Table(
@@ -72,9 +77,9 @@ class Product(db.Model):
         return self.categories[0]
 
     @staticmethod
-    def get_all_categories():
+    def get_all_categories_by_groups():
         """Helper proxy method."""
-        return Category.get_all()
+        return Category.get_by_groups()
 
     def __repr__(self):
         return "<Product {id}: {name}>".format(id=self.id, name=self.name)
@@ -98,20 +103,42 @@ class Category(db.Model):
 
     parent = relationship('Category',
                           foreign_keys='[Category.parent_id]',
-                          remote_side='[Category.id]')
+                          remote_side='[Category.id]',
+                          lazy='joined')
     products = relationship('Product',
                             secondary=association_table,
                             back_populates='categories',
                             order_by='Product.id')
 
-    @classmethod
-    def get_all(cls):
-        return cls.query.order_by(cls.id).all()
-
     def __repr__(self):
-        return '<Category {id}: {name} (parent_id={parent_id}, url={url})>'.format(
-            id=self.id, name=self.name, parent_id=self.parent_id, url=self.url,
+        return '<Category {id}: {name}>'.format(id=self.id, name=self.name)
+
+    @staticmethod
+    def get_by_groups():
+        Child = aliased(Category, name='child')
+
+        childfree = (
+            db.session.query(Category)
+                      .outerjoin(Child, Child.parent_id == Category.id)
+                      .filter(Category.parent_id == 0)
+                      .group_by(Category.id)
+                      .having(func.count(Child.id) == 0)
+                      .order_by(Category.id)
+                      .all()
         )
+
+        children = (
+            db.session.query(Category)
+                      .filter(Category.parent_id != 0)
+                      .order_by(Category.parent_id, Category.id)
+                      .all()
+        )
+
+        def key(category):
+            return category.parent_id
+
+        parts = (list(g) for k, g in itertools.groupby(children, key=key))
+        return [Group(None, childfree)] + [Group(g[0].parent, g) for g in parts]
 
 
 @app.route('/products')
