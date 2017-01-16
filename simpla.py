@@ -134,10 +134,7 @@ class Category(db.Model):
                       .all()
         )
 
-        def key(category):
-            return category.parent_id
-
-        parts = (list(g) for k, g in itertools.groupby(children, key=key))
+        parts = (list(g) for k, g in itertools.groupby(children, key=lambda c: c.parent_id))
         return [Group(None, childfree)] + [Group(g[0].parent, g) for g in parts]
 
 
