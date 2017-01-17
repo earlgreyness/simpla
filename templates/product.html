@@ -5,124 +5,45 @@
 
 {% block content %}
 
-<div class="container" style="max-width: 100%; margin-bottom: 200px;">
+<div ng-app="simplaApp"
+     ng-controller="productController"
+     class="container-fluid"
+     style="margin-left: 10%; margin-right: 10%; max-width: 100%; margin-bottom: 200px;">
 
-<div class="starter-template">
-  <h1>{{ title }}</h1>
-</div>
+  <div class="starter-template">
+    <h1><a href="{{ product.get_url() }}" target="_blank">{{ title }}</a></h1>
+  </div>
 
 
-<div class="row">
-    <div class="col-xs-6 col-lg-4">
-        {% for category in product.get_all_categories() %}
-        {% set checked = 'checked' if category in product.categories else '' %}
+  <div class="row">
+    <div ng-repeat="group in product.groups" class="col-xs-4 col-lg-3 outer-rectangle">
+      <div class="rectangle">
 
         <div class="checkbox">
-          <label>
-            <input type="checkbox" value="{{ category.id }}" {{ checked }}>
-            {{ category.name }}
+          <label style="font-weight: bold;">
+            <input type="checkbox" ng-model="group.parent.present" ng-change="fixChecking(group.parent.id)">
+            {{ '{{ group.parent.name }}' }}
           </label>
         </div>
 
-        {% endfor %}
-    </div>
-
-    <div class="col-xs-6 col-lg-4">
-        {% for category in product.get_all_categories() %}
-        {% set checked = 'checked' if category in product.categories else '' %}
-
-        <div class="checkbox">
+        <div class="checkbox" ng-repeat="child in group.children">
           <label>
-            <input type="checkbox" value="{{ category.id }}" {{ checked }}>
-            {{ category.name }}
+            <input type="checkbox" ng-model="child.present">
+            {{ '{{ child.name }}' }}
           </label>
         </div>
-
-        {% endfor %}
-        {% for category in product.get_all_categories() %}
-        {% set checked = 'checked' if category in product.categories else '' %}
-
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="{{ category.id }}" {{ checked }}>
-            {{ category.name }}
-          </label>
-        </div>
-
-        {% endfor %}
+      </div>
 
     </div>
-
-    <div class="col-xs-6 col-lg-4">
-        {% for category in product.get_all_categories() %}
-        {% set checked = 'checked' if category in product.categories else '' %}
-
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="{{ category.id }}" {{ checked }}>
-            {{ category.name }}
-          </label>
-        </div>
-
-        {% endfor %}
-    </div>
+  </div>
 
 
-</div>
-<div class="row">
-    <div class="col-xs-6 col-lg-4">
-        {% for category in product.get_all_categories() %}
-        {% set checked = 'checked' if category in product.categories else '' %}
 
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="{{ category.id }}" {{ checked }}>
-            {{ category.name }}
-          </label>
-        </div>
-
-        {% endfor %}
-    </div>
-
-    <div class="col-xs-6 col-lg-4">
-        {% for category in product.get_all_categories() %}
-        {% set checked = 'checked' if category in product.categories else '' %}
-
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="{{ category.id }}" {{ checked }}>
-            {{ category.name }}
-          </label>
-        </div>
-
-        {% endfor %}
-
-    </div>
-
-    <div class="col-xs-6 col-lg-4">
-        {% for category in product.get_all_categories() %}
-        {% set checked = 'checked' if category in product.categories else '' %}
-
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="{{ category.id }}" {{ checked }}>
-            {{ category.name }}
-          </label>
-        </div>
-
-        {% endfor %}
-    </div>
+  <!-- <pre>product = {{ '{{product | json}}' }}</pre> -->
 
 
 </div>
 
 
-
-
-
-
-
-
-</div>
 
 {% endblock %}
