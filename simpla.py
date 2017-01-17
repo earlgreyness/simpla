@@ -193,6 +193,11 @@ class ProductResource(Resource):
 api.add_resource(ProductResource, '/api/product')
 
 
+@app.route('/')
+def show_index():
+    return redirect(url_for('show_products'))
+
+
 @app.route('/products')
 @login_required
 def show_products():
